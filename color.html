@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Colores Bedrock</title>
+    <style>
+        body {
+            background: #e0e0e0;
+            color: #000000;
+            font-family: 'Comic Sans MS', 'Arial', 'Verdana', sans-serif;
+            margin: 15px;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #f0f0f0;
+            border: 4px solid #808080;
+            padding: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #000080;
+            margin-top: 0;
+            border-bottom: 3px dotted #808080;
+            padding-bottom: 8px;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+        }
+
+        .sub {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #333333;
+            margin-top: -8px;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 12px 0 4px 0;
+            color: #000000;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 5px;
+            border: 3px inset #808080;
+            background: #ffffff;
+            color: #000000;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 55px;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            border-color: #000080;
+            background: #f0f8ff;
+        }
+
+        .btn {
+            background: #d0d0d0;
+            border: 3px outset #808080;
+            color: #000000;
+            padding: 4px 14px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: #b0b0b0;
+            border-style: inset;
+        }
+
+        .btn-primary {
+            background: #f0d080;
+            border-color: #b09040;
+        }
+
+        .btn-primary:hover {
+            background: #e0c060;
+        }
+
+        .btn-danger {
+            background: #e08080;
+            border-color: #b04040;
+        }
+
+        .btn-danger:hover {
+            background: #d06060;
+        }
+
+        .btn-success {
+            background: #80c080;
+            border-color: #408040;
+        }
+
+        .btn-success:hover {
+            background: #60b060;
+        }
+
+        .btn-sm {
+            padding: 2px 10px;
+            font-size: 0.7rem;
+        }
+
+        .gradient-slider-wrap {
+            background: #d0d0d0;
+            border: 3px inset #808080;
+            padding: 10px 6px 10px 6px;
+            margin: 6px 0 10px 0;
+        }
+
+        .slider-track {
+            position: relative;
+            height: 40px;
+            width: 100%;
+            margin: 4px 0 6px 0;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .slider-track canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 3px solid #808080;
+            background: #aaaaaa;
+            cursor: pointer;
+        }
+
+        .stop-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            align-items: center;
+            margin-top: 6px;
+            padding: 4px 2px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #c8c8c8;
+            border: 2px solid #808080;
+            padding: 6px;
+        }
+
+        .stop-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #d8d8d8;
+            padding: 2px 8px 2px 4px;
+            border: 3px groove #808080;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stop-item .color-preview {
+            width: 26px;
+            height: 26px;
+            border: 2px solid #606060;
+            flex-shrink: 0;
+        }
+
+        .stop-item .stop-label {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .stop-item select {
+            background: #ffffff;
+            color: #000000;
+            border: 2px inset #808080;
+            padding: 2px 4px;
+            font-size: 0.7rem;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            min-width: 55px;
+        }
+
+        .stop-item select option {
+            padding: 2px 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stop-item .delete-btn {
+            background: #c06060;
+            border: 3px outset #904040;
+            color: #ffffff;
+            font-weight: bold;
+            width: 22px;
+            height: 22px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .stop-item .delete-btn:hover {
+            background: #a04040;
+            border-style: inset;
+        }
+
+        .preview-box {
+            background: #f0f0f0;
+            border: 4px groove #808080;
+            padding: 10px 14px;
+            margin: 14px 0 8px 0;
+            font-size: 1.4rem;
+            line-height: 1.7;
+            word-break: break-word;
+            min-height: 55px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+        }
+
+        .preview-box .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #404040;
+            margin-bottom: 4px;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            border-bottom: 2px dotted #808080;
+        }
+
+        .output-area {
+            background: #f0f0f0;
+            border: 3px inset #808080;
+            padding: 6px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #000000;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 4px 0 6px 0;
+        }
+
+        .copy-btn {
+            margin-top: 2px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 6px 0 6px 0;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            background: #d8d8d8;
+            padding: 4px 18px;
+            border: 4px outset #808080;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #000000;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+        }
+
+        .mode-tab.active {
+            background: #f0d080;
+            border-style: inset;
+            border-color: #b09040;
+        }
+
+        .mode-tab:hover {
+            background: #c0c0c0;
+        }
+
+        .mode-tab.active:hover {
+            background: #e8c870;
+        }
+
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mt-1 {
+            margin-top: 6px;
+        }
+
+        .color-select {
+            background: #ffffff;
+            border: 3px inset #808080;
+            padding: 3px 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .color-select option {
+            padding: 2px 6px;
+        }
+
+        .color-footer {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #000000;
+            border-top: 3px double #808080;
+            padding-top: 10px;
+        }
+
+        .color-footer strong {
+            font-weight: bold;
+            color: #000080;
+        }
+
+        .color-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            margin: 6px 0 0 0;
+        }
+
+        .color-chip {
+            display: inline-block;
+            padding: 2px 8px;
+            border: 2px solid #606060;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .preview-box {
+                font-size: 1.1rem;
+                padding: 6px 8px;
+            }
+            .stop-item {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Generador de Colores Bedrock</h1>
+    <div class="sub">seleccion exacta - solo colores bedrock</div>
+
+    <label for="textInput">texto a formatear</label>
+    <textarea id="textInput">Hecho por Electro</textarea>
+
+    <label>modo</label>
+    <div class="mode-tabs" id="modeTabs">
+        <span class="mode-tab active" data-mode="gradient">gradiente</span>
+        <span class="mode-tab" data-mode="alternate">intercalado</span>
+    </div>
+
+    <div id="gradientControls">
+        <label>puntos de color (clic en la barra para añadir)</label>
+        <div class="gradient-slider-wrap">
+            <div class="slider-track" id="sliderTrack">
+                <canvas id="sliderCanvas" height="40"></canvas>
+            </div>
+            <div class="stop-points" id="stopPointsContainer"></div>
+            <div class="flex mt-1">
+                <button class="btn btn-primary btn-sm" id="addStopBtn">añadir</button>
+                <button class="btn btn-danger btn-sm" id="resetStopsBtn">reiniciar</button>
+                <button class="btn btn-success btn-sm" id="addBlueBtn">azul</button>
+                <button class="btn btn-success btn-sm" id="addDiamondBtn">diamante</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alternateControls" style="display:none;">
+        <div class="flex">
+            <label style="display:inline; margin-right:4px;">color 1:</label>
+            <select id="altColor1" class="color-select"></select>
+            <label style="display:inline; margin-left:10px; margin-right:4px;">color 2:</label>
+            <select id="altColor2" class="color-select"></select>
+        </div>
+    </div>
+
+    <label>vista previa (con colores reales)</label>
+    <div class="preview-box" id="previewBox">
+        <div class="label">▼ con codigos §</div>
+        <span id="previewText">Hecho por Electro</span>
+    </div>
+
+    <label>codigo generado</label>
+    <div class="output-area" id="outputCode">§aHecho por Electro</div>
+    <button class="btn btn-primary copy-btn" id="copyBtn">copiar codigo</button>
+
+    <div class="color-footer">
+        <strong>colores de bedrock (todos disponibles):</strong><br>
+        <div class="color-grid">
+            <span class="color-chip" style="background:#000000; color:#ffffff;">§0 negro</span>
+            <span class="color-chip" style="background:#0000aa; color:#ffffff;">§1 azul oscuro</span>
+            <span class="color-chip" style="background:#00aa00; color:#ffffff;">§2 verde oscuro</span>
+            <span class="color-chip" style="background:#00aaaa; color:#ffffff;">§3 aqua oscuro</span>
+            <span class="color-chip" style="background:#aa0000; color:#ffffff;">§4 rojo oscuro</span>
+            <span class="color-chip" style="background:#aa00aa; color:#ffffff;">§5 purpura oscuro</span>
+            <span class="color-chip" style="background:#ffaa00; color:#000000;">§6 oro</span>
+            <span class="color-chip" style="background:#aaaaaa; color:#000000;">§7 gris</span>
+            <span class="color-chip" style="background:#555555; color:#ffffff;">§8 gris oscuro</span>
+            <span class="color-chip" style="background:#5555ff; color:#ffffff;">§9 azul</span>
+            <span class="color-chip" style="background:#55ff55; color:#000000;">§a verde</span>
+            <span class="color-chip" style="background:#55ffff; color:#000000;">§b aqua</span>
+            <span class="color-chip" style="background:#ff5555; color:#000000;">§c rojo</span>
+            <span class="color-chip" style="background:#ff55ff; color:#000000;">§d purpura claro</span>
+            <span class="color-chip" style="background:#ffff55; color:#000000;">§e amarillo</span>
+            <span class="color-chip" style="background:#ffffff; color:#000000; border-color:#000;">§f blanco</span>
+            <span class="color-chip" style="background:#ddd605; color:#000000;">§g minecoin</span>
+            <span class="color-chip" style="background:#e3d4d1; color:#000000;">§h quartz</span>
+            <span class="color-chip" style="background:#cecaca; color:#000000;">§i iron</span>
+            <span class="color-chip" style="background:#443a3b; color:#ffffff;">§j netherite</span>
+            <span class="color-chip" style="background:#971607; color:#ffffff;">§m redstone</span>
+            <span class="color-chip" style="background:#b4684d; color:#ffffff;">§n copper</span>
+            <span class="color-chip" style="background:#deb12d; color:#000000;">§p gold</span>
+            <span class="color-chip" style="background:#119f36; color:#ffffff;">§q emerald</span>
+            <span class="color-chip" style="background:#2cbaa8; color:#000000;">§s diamond</span>
+            <span class="color-chip" style="background:#21497b; color:#ffffff;">§t lapis</span>
+            <span class="color-chip" style="background:#9a5cc6; color:#ffffff;">§u amethyst</span>
+            <span class="color-chip" style="background:#eb7114; color:#000000;">§v resin</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const COLOR_MAP = {
+            '0': { name: 'negro', hex: '#000000' },
+            '1': { name: 'azul oscuro', hex: '#0000aa' },
+            '2': { name: 'verde oscuro', hex: '#00aa00' },
+            '3': { name: 'aqua oscuro', hex: '#00aaaa' },
+            '4': { name: 'rojo oscuro', hex: '#aa0000' },
+            '5': { name: 'purpura oscuro', hex: '#aa00aa' },
+            '6': { name: 'oro', hex: '#ffaa00' },
+            '7': { name: 'gris', hex: '#aaaaaa' },
+            '8': { name: 'gris oscuro', hex: '#555555' },
+            '9': { name: 'azul', hex: '#5555ff' },
+            'a': { name: 'verde', hex: '#55ff55' },
+            'b': { name: 'aqua', hex: '#55ffff' },
+            'c': { name: 'rojo', hex: '#ff5555' },
+            'd': { name: 'purpura claro', hex: '#ff55ff' },
+            'e': { name: 'amarillo', hex: '#ffff55' },
+            'f': { name: 'blanco', hex: '#ffffff' },
+            'g': { name: 'minecoin gold', hex: '#ddd605' },
+            'h': { name: 'quartz', hex: '#e3d4d1' },
+            'i': { name: 'iron', hex: '#cecaca' },
+            'j': { name: 'netherite', hex: '#443a3b' },
+            'm': { name: 'redstone', hex: '#971607' },
+            'n': { name: 'copper', hex: '#b4684d' },
+            'p': { name: 'gold', hex: '#deb12d' },
+            'q': { name: 'emerald', hex: '#119f36' },
+            's': { name: 'diamond', hex: '#2cbaa8' },
+            't': { name: 'lapis', hex: '#21497b' },
+            'u': { name: 'amethyst', hex: '#9a5cc6' },
+            'v': { name: 'resin', hex: '#eb7114' },
+        };
+
+        const COLOR_CODES = Object.keys(COLOR_MAP);
+        const DEFAULT_STOPS = [
+            { pos: 0, code: 'c' },
+            { pos: 0.5, code: 'e' },
+            { pos: 1, code: 'a' }
+        ];
+
+        // DOM refs
+        const textInput = document.getElementById('textInput');
+        const previewText = document.getElementById('previewText');
+        const outputCode = document.getElementById('outputCode');
+        const copyBtn = document.getElementById('copyBtn');
+
+        const sliderCanvas = document.getElementById('sliderCanvas');
+        const sliderTrack = document.getElementById('sliderTrack');
+        const stopPointsContainer = document.getElementById('stopPointsContainer');
+        const addStopBtn = document.getElementById('addStopBtn');
+        const resetStopsBtn = document.getElementById('resetStopsBtn');
+        const addBlueBtn = document.getElementById('addBlueBtn');
+        const addDiamondBtn = document.getElementById('addDiamondBtn');
+
+        const modeTabs = document.querySelectorAll('.mode-tab');
+        const gradientControls = document.getElementById('gradientControls');
+        const alternateControls = document.getElementById('alternateControls');
+        const altColor1 = document.getElementById('altColor1');
+        const altColor2 = document.getElementById('altColor2');
+
+        let stops = JSON.parse(JSON.stringify(DEFAULT_STOPS));
+        let currentMode = 'gradient';
+        let isDragging = false;
+        let dragIndex = -1;
+
+        function populateColorSelects() {
+            const selects = [altColor1, altColor2];
+            selects.forEach(sel => {
+                sel.innerHTML = '';
+                COLOR_CODES.forEach(code => {
+                    const opt = document.createElement('option');
+                    opt.value = code;
+                    const info = COLOR_MAP[code];
+                    opt.textContent = '§' + code + ' ' + info.name;
+                    opt.style.backgroundColor = info.hex;
+                    opt.style.color = '#ffffff';
+                    opt.style.padding = '2px 6px';
+                    if (code === '0' || code === '7' || code === '8' || code === 'f' || code === 'h' || code === 'i') {
+                        opt.style.color = '#000000';
+                    }
+                    sel.appendChild(opt);
+                });
+            });
+            altColor1.value = 'c';
+            altColor2.value = 'a';
+        }
+        populateColorSelects();
+
+        // Funciones de color
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : { r: 0, g: 0, b: 0 };
+        }
+
+        function rgbToHex(r, g, b) {
+            const clamp = v => Math.min(255, Math.max(0, Math.round(v)));
+            return '#' + [clamp(r), clamp(g), clamp(b)].map(c => c.toString(16).padStart(2, '0')).join('');
+        }
+
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function lerpColor(hex1, hex2, t) {
+            const c1 = hexToRgb(hex1);
+            const c2 = hexToRgb(hex2);
+            return rgbToHex(
+                lerp(c1.r, c2.r, t),
+                lerp(c1.g, c2.g, t),
+                lerp(c1.b, c2.b, t)
+            );
+        }
+
+        function getHexFromCode(code) {
+            const info = COLOR_MAP[code];
+            return info ? info.hex : '#ffffff';
+        }
+
+        function getColorAtPosition(pos) {
+            if (!stops || stops.length === 0) return '#ffffff';
+            if (stops.length === 1) return getHexFromCode(stops[0].code);
+            const sorted = [...stops].sort((a, b) => a.pos - b.pos);
+            if (pos <= sorted[0].pos) return getHexFromCode(sorted[0].code);
+            if (pos >= sorted[sorted.length - 1].pos) return getHexFromCode(sorted[sorted.length - 1].code);
+
+            for (let i = 0; i < sorted.length - 1; i++) {
+                const a = sorted[i];
+                const b = sorted[i + 1];
+                if (pos >= a.pos && pos <= b.pos) {
+                    const t = (pos - a.pos) / (b.pos - a.pos);
+                    const hexA = getHexFromCode(a.code);
+                    const hexB = getHexFromCode(b.code);
+                    return lerpColor(hexA, hexB, t);
+                }
+            }
+            return getHexFromCode(sorted[sorted.length - 1].code);
+        }
+
+        function closestCode(hex) {
+            const target = hexToRgb(hex);
+            let best = 'f';
+            let bestDist = Infinity;
+            for (const code of COLOR_CODES) {
+                const info = COLOR_MAP[code];
+                if (!info) continue;
+                const c = hexToRgb(info.hex);
+                const dist = Math.sqrt(
+                    (c.r - target.r) ** 2 +
+                    (c.g - target.g) ** 2 +
+                    (c.b - target.b) ** 2
+                );
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    best = code;
+                }
+            }
+            return best;
+        }
+
+        function generateFormattedText() {
+            const text = textInput.value || '';
+            if (!text) return '';
+
+            if (currentMode === 'gradient') {
+                return generateGradient(text);
+            } else {
+                return generateAlternate(text);
+            }
+        }
+
+        function generateGradient(text) {
+            if (!stops || stops.length === 0) return text;
+            if (text.length === 0) return '';
+            const chars = [...text];
+            const total = chars.length;
+            let result = '';
+            let lastCode = null;
+
+            for (let i = 0; i < total; i++) {
+                const pos = total === 1 ? 0.5 : i / (total - 1);
+                const hex = getColorAtPosition(pos);
+                const code = closestCode(hex);
+                if (code !== lastCode) {
+                    result += '§' + code;
+                    lastCode = code;
+                }
+                result += chars[i];
+            }
+            return result;
+        }
+
+        function generateAlternate(text) {
+            const code1 = altColor1.value || 'f';
+            const code2 = altColor2.value || 'a';
+            const chars = [...text];
+            let result = '';
+            let lastCode = null;
+            for (let i = 0; i < chars.length; i++) {
+                const code = i % 2 === 0 ? code1 : code2;
+                if (code !== lastCode) {
+                    result += '§' + code;
+                    lastCode = code;
+                }
+                result += chars[i];
+            }
+            return result;
+        }
+
+        function updateAll() {
+            const formatted = generateFormattedText();
+
+            const text = textInput.value || '';
+            if (text.length === 0) {
+                previewText.textContent = '(texto vacio)';
+                outputCode.textContent = '';
+                drawSlider();
+                renderStops();
+                return;
+            }
+
+            const formattedCode = formatted;
+            outputCode.textContent = formattedCode;
+
+
+            let previewHtml = '';
+            let i = 0;
+            let currentCode = 'f'; // default
+            const chars = [...text];
+            let colorSeq = [];
+            let codeSeq = [];
+            let idx = 0;
+            while (idx < formattedCode.length) {
+                if (formattedCode[idx] === '§' && idx + 1 < formattedCode.length) {
+                    const code = formattedCode[idx + 1];
+                    currentCode = code;
+                    idx += 2;
+                } else {
+                    // este caracter tiene el color currentCode
+                    const char = formattedCode[idx];
+                    const hex = getHexFromCode(currentCode);
+                    colorSeq.push({ char, hex, code: currentCode });
+                    idx++;
+                }
+            }
+
+            previewHtml = colorSeq.map(item => {
+                const hex = item.hex;
+                const char = item.char;
+                const safeChar = char.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<span style="color:${hex}; font-weight:bold;">${safeChar}</span>`;
+            }).join('');
+
+            previewText.innerHTML = previewHtml;
+
+            drawSlider();
+            renderStops();
+        }
+
+        function drawSlider() {
+            const canvas = sliderCanvas;
+            const dpr = window.devicePixelRatio || 1;
+            const w = sliderTrack.clientWidth;
+            const h = 40;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+
+            const grad = ctx.createLinearGradient(0, 0, w, 0);
+            const steps = 200;
+            for (let i = 0; i <= steps; i++) {
+                const pos = i / steps;
+                const hex = getColorAtPosition(pos);
+                grad.addColorStop(pos, hex);
+            }
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            const sorted = [...stops].sort((a, b) => a.pos - b.pos);
+            sorted.forEach((stop) => {
+                const x = stop.pos * w;
+                const hex = getHexFromCode(stop.code);
+                ctx.beginPath();
+                ctx.arc(x, h / 2, 10, 0, 2 * Math.PI);
+                ctx.fillStyle = hex;
+                ctx.fill();
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 10px "Courier New", monospace';
+                ctx.textAlign = 'center';
+                ctx.shadowColor = 'rgba(255,255,255,0.6)';
+                ctx.shadowBlur = 4;
+                ctx.fillText('§' + stop.code, x, h - 4);
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        function renderStops() {
+            const container = stopPointsContainer;
+            container.innerHTML = '';
+            const sorted = [...stops].sort((a, b) => a.pos - b.pos);
+            sorted.forEach((stop) => {
+                const div = document.createElement('div');
+                div.className = 'stop-item';
+                const hex = getHexFromCode(stop.code);
+                
+                const select = document.createElement('select');
+                COLOR_CODES.forEach(code => {
+                    const opt = document.createElement('option');
+                    opt.value = code;
+                    const info = COLOR_MAP[code];
+                    opt.textContent = '§' + code + ' ' + info.name;
+                    opt.style.backgroundColor = info.hex;
+                    opt.style.color = '#ffffff';
+                    opt.style.padding = '2px 6px';
+                    if (code === '0' || code === '7' || code === '8' || code === 'f' || code === 'h' || code === 'i') {
+                        opt.style.color = '#000000';
+                    }
+                    if (code === stop.code) opt.selected = true;
+                    select.appendChild(opt);
+                });
+                select.addEventListener('change', (e) => {
+                    const newCode = e.target.value;
+                    const idx = stops.findIndex(s => s.pos === stop.pos && s.code === stop.code);
+                    if (idx !== -1) {
+                        stops[idx].code = newCode;
+                        updateAll();
+                    }
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'X';
+                deleteBtn.addEventListener('click', () => {
+                    const idx = stops.findIndex(s => s.pos === stop.pos && s.code === stop.code);
+                    if (idx !== -1 && stops.length > 1) {
+                        stops.splice(idx, 1);
+                        updateAll();
+                    }
+                });
+
+                div.innerHTML = `
+                    <span class="color-preview" style="background:${hex};"></span>
+                    <span class="stop-label">${Math.round(stop.pos * 100)}%</span>
+                `;
+                div.appendChild(select);
+                div.appendChild(deleteBtn);
+                container.appendChild(div);
+            });
+        }
+
+        function getPosFromEvent(e) {
+            const rect = sliderTrack.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            return Math.min(1, Math.max(0, x));
+        }
+
+        function handleSliderClick(e) {
+            const pos = getPosFromEvent(e);
+            let closest = null;
+            let closestDist = Infinity;
+            stops.forEach((s, idx) => {
+                const d = Math.abs(s.pos - pos);
+                if (d < closestDist) {
+                    closestDist = d;
+                    closest = { idx, stop: s };
+                }
+            });
+            if (closest && closestDist < 0.04) {
+                dragIndex = closest.idx;
+                isDragging = true;
+                updateStopPosition(e);
+            } else {
+                const hex = getColorAtPosition(pos);
+                const code = closestCode(hex);
+                stops.push({ pos, code });
+                updateAll();
+            }
+        }
+
+        function updateStopPosition(e) {
+            if (!isDragging || dragIndex === -1) return;
+            const pos = getPosFromEvent(e);
+            const realIdx = stops.findIndex((s, i) => i === dragIndex);
+            if (realIdx === -1) return;
+            let newPos = pos;
+            const others = stops.filter((_, i) => i !== realIdx);
+            let minPos = 0;
+            let maxPos = 1;
+            others.forEach(o => {
+                if (o.pos < stops[realIdx].pos) minPos = Math.max(minPos, o.pos + 0.005);
+                if (o.pos > stops[realIdx].pos) maxPos = Math.min(maxPos, o.pos - 0.005);
+            });
+            newPos = Math.min(maxPos, Math.max(minPos, pos));
+            stops[realIdx].pos = newPos;
+            updateAll();
+        }
+
+        // ventos del slider
+        sliderCanvas.addEventListener('mousedown', (e) => {
+            handleSliderClick(e);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                updateStopPosition(e);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            dragIndex = -1;
+        });
+
+        sliderCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const ev = new MouseEvent('mousedown', { clientX: touch.clientX, clientY: touch.clientY });
+            handleSliderClick(ev);
+        }, { passive: false });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const ev = new MouseEvent('mousemove', { clientX: touch.clientX, clientY: touch.clientY });
+                updateStopPosition(ev);
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+            dragIndex = -1;
+        });
+
+        // Botones
+        addStopBtn.addEventListener('click', () => {
+            const pos = Math.random() * 0.8 + 0.1;
+            const hex = getColorAtPosition(pos);
+            const code = closestCode(hex);
+            stops.push({ pos, code });
+            updateAll();
+        });
+
+        resetStopsBtn.addEventListener('click', () => {
+            stops = JSON.parse(JSON.stringify(DEFAULT_STOPS));
+            updateAll();
+        });
+
+        addBlueBtn.addEventListener('click', () => {
+            const pos = Math.random() * 0.6 + 0.2;
+            stops.push({ pos, code: '9' });
+            updateAll();
+        });
+
+        addDiamondBtn.addEventListener('click', () => {
+            const pos = Math.random() * 0.6 + 0.2;
+            stops.push({ pos, code: 's' });
+            updateAll();
+        });
+
+        modeTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                modeTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentMode = tab.dataset.mode;
+                if (currentMode === 'gradient') {
+                    gradientControls.style.display = '';
+                    alternateControls.style.display = 'none';
+                } else {
+                    gradientControls.style.display = 'none';
+                    alternateControls.style.display = '';
+                }
+                updateAll();
+            });
+        });
+
+        textInput.addEventListener('input', updateAll);
+        altColor1.addEventListener('change', updateAll);
+        altColor2.addEventListener('change', updateAll);
+
+        // Copiarxd
+        copyBtn.addEventListener('click', () => {
+            const text = outputCode.textContent;
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                const original = copyBtn.textContent;
+                copyBtn.textContent = 'copiado!';
+                setTimeout(() => { copyBtn.textContent = original; }, 2000);
+            }).catch(() => {
+                const range = document.createRange();
+                range.selectNode(outputCode);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                const original = copyBtn.textContent;
+                copyBtn.textContent = 'copiado!';
+                setTimeout(() => { copyBtn.textContent = original; }, 2000);
+            });
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                drawSlider();
+            }, 100);
+        });
+
+        updateAll();
+    })();
+</script>
+</body>
+</html>
